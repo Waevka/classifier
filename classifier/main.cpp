@@ -27,6 +27,7 @@ bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
 	bool success = false;
 	ifstream stream;
 
+	///////////////////////////////// load iris data
 	stream.open("bezdekIris.data");
 	if (stream.is_open()) {
 		string line;
@@ -61,6 +62,30 @@ bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
 		success = true;
 	}
 	stream.close();
+	///////////////////////////////////// load wine data
+	stream.open("wine.data");
+	if(stream.is_open()) {
+		string line;
+		while (getline(stream, line)) {
+			string singleItem;
+			stringstream dataString(line);
+			vector<double> dataVector;
+			while (getline(dataString, singleItem, ',')) {
+				double x;
+				const char *doubleMe = singleItem.c_str();
+				x = atof(doubleMe);
+				dataVector.push_back(x);
+			}
+			if (!dataVector.empty()) {
+				Wine *object = new Wine();
+				for (int i = 0; i < 13; i++) {
+					object->setDataAt(i, dataVector.at(i));
+				}
+				wineList->push_back(*object);
+			}
+		}
+		success = success & true;
+	}
 
 	return success;
 }
