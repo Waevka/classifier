@@ -4,15 +4,18 @@
 
 Wine::Wine()
 {
+	data = new float[13];
 }
 
 
 Wine::~Wine()
 {	
+	delete[] data;
 }
 
 std::string Wine::getColumnName(int i) {
 	static const std::string wineColumnNames[] = {
+		"Class",
 		"Alcohol",
 		"Malic acid",
 		"Ash",
@@ -32,5 +35,5 @@ std::string Wine::getColumnName(int i) {
 }
 
 int Wine::getColumnCount() {
-	return 12;
+	return 13;
 }
