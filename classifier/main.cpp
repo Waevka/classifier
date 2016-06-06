@@ -26,7 +26,6 @@ int main(int argc, char* argv[]) {
 bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
 	bool success = false;
 	ifstream stream;
-	ClassifierObject *object;
 
 	stream.open("bezdekIris.data");
 	if (stream.is_open()) {
@@ -50,8 +49,14 @@ bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
 				}
 				dataVector.push_back(x);
 			}
-			if(!dataVector.empty())
-			cout << dataVector.at(0) << "\n";
+			if (!dataVector.empty()) {
+				Iris *object = new Iris();
+				for (int i = 0; i < 2; i++) {
+					object->setDataAt(i+1, dataVector.at(i));
+				}
+				object->setDataAt(0, dataVector.at(4));
+				irisList->push_back(*object);
+			}
 		}
 		success = true;
 	}

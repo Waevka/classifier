@@ -4,7 +4,7 @@
 
 Wine::Wine()
 {
-	data = new float[13];
+	data = new double[13];
 }
 
 

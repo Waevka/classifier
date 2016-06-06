@@ -4,7 +4,7 @@
 
 Iris::Iris()
 {
-	data = new float[5];
+	data = new double[5];
 }
 
 Iris::~Iris()

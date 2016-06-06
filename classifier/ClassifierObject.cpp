@@ -4,7 +4,7 @@ ClassifierObject::~ClassifierObject()
 {
 }
 
-void ClassifierObject::setDataAt(int i, float d)
+void ClassifierObject::setDataAt(int i, double d)
 {
 	ClassifierObject::data[i] = d;
 }
