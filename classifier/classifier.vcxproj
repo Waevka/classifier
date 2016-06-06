@@ -146,7 +146,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClassifierObject.cpp" />
+    <ClCompile Include="Iris.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Wine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClassifierObject.h" />
+    <ClInclude Include="Iris.h" />
+    <ClInclude Include="Wine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
