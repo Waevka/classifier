@@ -13,6 +13,10 @@ int ClassifierObject::getColumnCount() {
 	return 0;
 }
 
+std::string ClassifierObject::getColumnName(int i) {
+	return "none";
+}
+
 void ClassifierObject::setDataAt(int i, double d)
 {
 	ClassifierObject::data[i] = d;
