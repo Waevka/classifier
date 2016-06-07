@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <time.h>
 #include "ClassifierObject.h"
 #include "Iris.h"
 #include "Wine.h"
@@ -15,6 +16,8 @@ bool loadFiles(list<ClassifierObject>*, list<ClassifierObject>*, int*);
 void divide(const list<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
 
 int main(int argc, char* argv[]) {
+
+	srand(time(NULL));
 
 	int *objectCount = new int[2];
 	list<ClassifierObject> *irisRawData = new list<ClassifierObject>;
@@ -104,7 +107,13 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>* processedData, int parts, int count) {
 	int dataSetGroups = 3;
 	int *dataSetGroupsProportions = new int[dataSetGroups] {0};
+	for (int i = 0; i < dataSetGroups; i++) {
+		processedData->push_back(new vector<ClassifierObject>);
+	}
 
+	while(count >= 0) {
+		int group = rand() % 3;
+	}
 	//for () {
 		//int index = data[i];
 		//dataSetGroupsProportions[index]++;
