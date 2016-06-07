@@ -11,30 +11,32 @@
 
 using namespace std;
 
-bool loadFiles(list<ClassifierObject>*, list<ClassifierObject>*);
-void divide(const list<ClassifierObject>*, vector<vector<ClassifierObject>>*);
+bool loadFiles(list<ClassifierObject>*, list<ClassifierObject>*, int*);
+void divide(const list<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
 
 int main(int argc, char* argv[]) {
 
+	int *objectCount = new int[2];
 	list<ClassifierObject> *irisRawData = new list<ClassifierObject>;
 	list<ClassifierObject> *wineRawData = new list<ClassifierObject>;
-	loadFiles(irisRawData, wineRawData);
+	loadFiles(irisRawData, wineRawData, objectCount);
 
 	vector<vector<ClassifierObject>> *irisGroups = new vector<vector<ClassifierObject>>();
 	vector<vector<ClassifierObject>> *wineGroups = new vector<vector<ClassifierObject>>();
 
-	divide(irisRawData, irisGroups);
-	divide(wineRawData, wineGroups);
+	divide(irisRawData, irisGroups, 3, objectCount[0]);
+	divide(wineRawData, wineGroups, 3, objectCount[1]);
 
 	cin.get();
 	return 0;
 }
 
-bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineList) {
+bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineList, int *objectsCount) {
 	bool success = false;
 	ifstream stream;
 	///////////////////////////////// load iris data
 	stream.open("bezdekIris.data");
+	objectsCount[0] = 0;
 	if (stream.is_open()) {
 		string line;
 		while (getline(stream, line)) {
@@ -63,6 +65,7 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 				}
 				object->setDataAt(0, dataVector.at(4));
 				irisList->push_back(*object);
+				objectsCount[0] ++;
 			}
 		}
 		success = true;
@@ -70,6 +73,7 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 	stream.close();
 	///////////////////////////////////// load wine data
 	stream.open("wine.data");
+	objectsCount[1] = 0;
 	if(stream.is_open()) {
 		string line;
 		while (getline(stream, line)) {
@@ -88,6 +92,7 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 					object->setDataAt(i, dataVector.at(i));
 				}
 				wineList->push_back(*object);
+				objectsCount[1] ++;
 			}
 		}
 		success = success & true;
@@ -96,6 +101,17 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 	return success;
 }
 
-void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>* processedData) {
-	int parts = 3;
+void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>* processedData, int parts, int count) {
+	int dataSetGroups = 3;
+	int *dataSetGroupsProportions = new int[dataSetGroups] {0};
+
+	//for () {
+		//int index = data[i];
+		//dataSetGroupsProportions[index]++;
+	//}
+
+	int *groupAmount = new int[parts];
+
+	delete dataSetGroupsProportions;
+	delete groupAmount;
 }

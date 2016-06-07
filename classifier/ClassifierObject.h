@@ -11,5 +11,6 @@ public:
 	virtual std::string getColumnName(int i);
 	virtual int getColumnCount();
 	void setDataAt(int i, double d);
+	double getDataAt(int i);
 };
 

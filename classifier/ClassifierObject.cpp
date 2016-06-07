@@ -21,3 +21,8 @@ void ClassifierObject::setDataAt(int i, double d)
 {
 	ClassifierObject::data[i] = d;
 }
+
+double ClassifierObject::getDataAt(int i)
+{
+	return ClassifierObject::data[i];
+}
