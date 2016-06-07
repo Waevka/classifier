@@ -11,22 +11,28 @@
 
 using namespace std;
 
-bool loadFiles(list<Iris> *irisList, list<Wine> *wineList);
+bool loadFiles(list<ClassifierObject>*, list<ClassifierObject>*);
+void divide(const list<ClassifierObject>*, vector<vector<ClassifierObject>>*);
 
 int main(int argc, char* argv[]) {
 
-	list<Iris> irisList;
-	list<Wine> wineList;
-	loadFiles(&irisList, &wineList);
+	list<ClassifierObject> *irisRawData = new list<ClassifierObject>;
+	list<ClassifierObject> *wineRawData = new list<ClassifierObject>;
+	loadFiles(irisRawData, wineRawData);
+
+	vector<vector<ClassifierObject>> *irisGroups = new vector<vector<ClassifierObject>>();
+	vector<vector<ClassifierObject>> *wineGroups = new vector<vector<ClassifierObject>>();
+
+	divide(irisRawData, irisGroups);
+	divide(wineRawData, wineGroups);
 
 	cin.get();
 	return 0;
 }
 
-bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
+bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineList) {
 	bool success = false;
 	ifstream stream;
-
 	///////////////////////////////// load iris data
 	stream.open("bezdekIris.data");
 	if (stream.is_open()) {
@@ -88,4 +94,8 @@ bool loadFiles(list<Iris> *irisList, list<Wine> *wineList) {
 	}
 
 	return success;
+}
+
+void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>* processedData) {
+	int parts = 3;
 }
