@@ -12,29 +12,30 @@
 
 using namespace std;
 
-bool loadFiles(list<ClassifierObject>*, list<ClassifierObject>*, int*);
-void divide(const list<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
+bool loadFiles(vector<ClassifierObject>*, vector<ClassifierObject>*, int*);
+void divide(const vector<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
 
 int main(int argc, char* argv[]) {
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
+	int groupCount = 3;
 
 	int *objectCount = new int[2];
-	list<ClassifierObject> *irisRawData = new list<ClassifierObject>;
-	list<ClassifierObject> *wineRawData = new list<ClassifierObject>;
+	vector<ClassifierObject> *irisRawData = new vector<ClassifierObject>;
+	vector<ClassifierObject> *wineRawData = new vector<ClassifierObject>;
 	loadFiles(irisRawData, wineRawData, objectCount);
 
-	vector<vector<ClassifierObject>> *irisGroups = new vector<vector<ClassifierObject>>();
-	vector<vector<ClassifierObject>> *wineGroups = new vector<vector<ClassifierObject>>();
+	vector<vector<ClassifierObject>> irisGroups(groupCount);
+	vector<vector<ClassifierObject>> wineGroups(groupCount);
 
-	divide(irisRawData, irisGroups, 3, objectCount[0]);
-	divide(wineRawData, wineGroups, 3, objectCount[1]);
+	divide(irisRawData, &irisGroups, groupCount, objectCount[0]);
+	divide(wineRawData, &wineGroups, groupCount, objectCount[1]);
 
 	cin.get();
 	return 0;
 }
 
-bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineList, int *objectsCount) {
+bool loadFiles(vector<ClassifierObject> *irisList, vector<ClassifierObject> *wineList, int *objectsCount) {
 	bool success = false;
 	ifstream stream;
 	///////////////////////////////// load iris data
@@ -104,15 +105,18 @@ bool loadFiles(list<ClassifierObject> *irisList, list<ClassifierObject> *wineLis
 	return success;
 }
 
-void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>* processedData, int parts, int count) {
+void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject>> *processedData, int parts, int count) {
 	int dataSetGroups = 3;
-	int *dataSetGroupsProportions = new int[dataSetGroups] {0};
-	for (int i = 0; i < dataSetGroups; i++) {
-		processedData->push_back(new vector<ClassifierObject>);
-	}
+	size_t groupSize = count / dataSetGroups + count % dataSetGroups;
+	int i = 0;
 
-	while(count >= 0) {
+	while(i < count) {
 		int group = rand() % 3;
+		vector<ClassifierObject> *chosen = &(*processedData)[group];
+		if (chosen->size() < groupSize) {
+			chosen->push_back((*data)[i]);
+			i++;
+		}
 	}
 	//for () {
 		//int index = data[i];
@@ -120,7 +124,5 @@ void divide(const list<ClassifierObject>* data, vector<vector<ClassifierObject>>
 	//}
 
 	int *groupAmount = new int[parts];
-
-	delete dataSetGroupsProportions;
 	delete groupAmount;
 }
