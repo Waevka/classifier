@@ -135,6 +135,16 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 void kNNmetric(vector<vector<ClassifierObject>>* data, int k)	{
 	int *groups = cross(k);
 
+	for (int i = 0; i < k; i++) {
+		int* currentGroup = &groups[i];
+		vector<ClassifierObject> testingGroup = (*data).at(currentGroup[0]);
+		vector<vector<ClassifierObject>> testGroups;
+		for (int j = 1; j < k; j++) {
+			testGroups.push_back((*data).at(currentGroup[j]));
+		}
+		//////////// process
+
+	}
 	//add loop for deletion
 	//delete[] groups;
 }
