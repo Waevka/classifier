@@ -14,15 +14,18 @@ using namespace std;
 
 bool loadFiles(vector<ClassifierObject>*, vector<ClassifierObject>*, int*);
 void divide(const vector<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
+void kNNmetric(vector<vector<ClassifierObject>>*, int);
+int *cross(int);
 
 int main(int argc, char* argv[]) {
 
 	srand((unsigned int)time(NULL));
 	int groupCount = 3;
-
 	int *objectCount = new int[2];
+
 	vector<ClassifierObject> *irisRawData = new vector<ClassifierObject>;
 	vector<ClassifierObject> *wineRawData = new vector<ClassifierObject>;
+
 	loadFiles(irisRawData, wineRawData, objectCount);
 
 	vector<vector<ClassifierObject>> irisGroups(groupCount);
@@ -30,6 +33,8 @@ int main(int argc, char* argv[]) {
 
 	divide(irisRawData, &irisGroups, groupCount, objectCount[0]);
 	divide(wineRawData, &wineGroups, groupCount, objectCount[1]);
+	
+	kNNmetric(&irisGroups, groupCount);
 
 	cin.get();
 	return 0;
@@ -125,4 +130,29 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 
 	int *groupAmount = new int[parts];
 	delete groupAmount;
+}
+
+void kNNmetric(vector<vector<ClassifierObject>>* data, int k)	{
+	int *groups = cross(k);
+
+	//add loop for deletion
+	//delete[] groups;
+}
+
+int *cross(int k) {
+	int **output = new int*[k];
+	for (int i = 0; i < k; i++) {
+		output[i] = new int[k];
+		int index = 1;
+		for (int y = 0; y < k; y++) {
+			if (y == i) {
+				output[i][0] = y;
+			}
+			else {
+				output[i][index] = y;
+				index++;
+			}
+		}
+	}
+	return *output;
 }
