@@ -50,6 +50,8 @@ int main(int argc, char* argv[]) {
 
 		kNNmetric(groupCount, 3, testingGroup, testGroups);
 	}
+	//add loop for deletion
+	//delete[] groups;
 	cin.get();
 	return 0;
 }
@@ -147,11 +149,24 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 }
 
 void kNNmetric(int k, int NN, vector<ClassifierObject> testGroup, vector<vector<ClassifierObject>> testingGroups) {
-	
-		//////////// process
+	for (int z = 0; z < (int)testGroup.size(); z++) {
 
-	//add loop for deletion
-	//delete[] groups;
+		ClassifierObject findMyFriends = testGroup.at(z);
+		vector<ClassifierObject> bestFriends;
+		for (int i = 0; i < NN; i++) bestFriends.push_back((testingGroups.at(0)).at(i)); // init closest neighbours 
+		int testingGroupsCount = (int)testingGroups.size();
+		
+		for (int x = 0; x < testingGroupsCount; x++) {
+			int testingGroupSize = (int)testingGroups.at(x).size();
+			for (int y = 0; y < testingGroupSize; y++) {
+
+
+			}
+		}
+
+	}
+
+	
 }
 
 int **cross(int k) {
