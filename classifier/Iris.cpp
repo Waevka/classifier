@@ -32,5 +32,5 @@ std::string Iris::getColumnName(int i) {
 }
 
 int Iris::getColumnCount() {
-	return 4;
+	return 5;
 }

@@ -104,7 +104,7 @@ bool loadFiles(vector<ClassifierObject*> *irisList, vector<ClassifierObject*> *w
 			}
 			if (!dataVector.empty()) {
 				Iris *object = new Iris();
-				for (int i = 0; i < 2; i++) {
+				for (int i = 0; i < 4; i++) {
 					object->setDataAt(i+1, dataVector.at(i));
 				}
 				object->setDataAt(0, dataVector.at(4));
@@ -180,6 +180,7 @@ void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObjec
 
 int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups, int method) {
 	int leader;
+	ClassifierObject *currentBestFriend = ((*testingGroups).at(0))->at(0);
 	for (int z = 0; z < (int)(*testGroup).size(); z++) {
 
 		ClassifierObject *findMyFriends = (*testGroup).at(z);
@@ -194,10 +195,13 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 				ClassifierObject *currentTestSubject = (*currentTestGroup).at(y);
 				for (int i = 0; i < NN; i++) {
 					if (currentTestSubject == (*bestFriends).at(i)) continue; // jesli adresy sa takie same
-					bool change = findMyFriends->isNewFriendBetter((*bestFriends).at(i), currentTestSubject, 1);
+					bool change = findMyFriends->isNewFriendBetter((*bestFriends).at(i), currentTestSubject, method);
 					if (change == true) {
 						(*bestFriends).at(i) = currentTestSubject;
 						break;
+					}
+					if (findMyFriends->isNewFriendBetter(currentBestFriend, currentTestSubject, method)) {
+						currentBestFriend = currentTestSubject;
 					}
 				}
 
