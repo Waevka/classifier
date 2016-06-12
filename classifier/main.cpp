@@ -49,8 +49,8 @@ int main(int argc, char* argv[]) {
 		wineGroups.push_back(new vector<ClassifierObject*>());
 	}
 
-	shuffle(&irisRawData, 30);
-	shuffle(&wineRawData, 30);
+	shuffle(&irisRawData, 150);
+	shuffle(&wineRawData, 150);
 	divide(&irisRawData, &irisGroups, groupCount, objectCount[0]);
 	divide(&wineRawData, &wineGroups, groupCount, objectCount[1]);
 	
@@ -193,9 +193,11 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 			for (int y = 0; y < testingGroupSize; y++) {
 				ClassifierObject *currentTestSubject = (*currentTestGroup).at(y);
 				for (int i = 0; i < NN; i++) {
+					if (currentTestSubject == (*bestFriends).at(i)) continue; // jesli adresy sa takie same
 					bool change = findMyFriends->isNewFriendBetter((*bestFriends).at(i), currentTestSubject, 1);
 					if (change == true) {
 						(*bestFriends).at(i) = currentTestSubject;
+						break;
 					}
 				}
 
@@ -212,7 +214,7 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 			if (groupCounter[x] > groupCounter[leader]) leader = x;
 		}
 		leader += 1;
-		cout << "\nNajblizsi sasiedzi dla probki " << z << " znalezieni, klasyfikacja: " << leader << "(" << (*findMyFriends).getDataAt(0) << ")";
+		cout << "\nKlasyfikacja dla probki " << z << ": " << leader << "(powinno byc: " << (*findMyFriends).getDataAt(0) << ")";
 
 	}
 	return leader;
