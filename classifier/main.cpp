@@ -14,7 +14,7 @@ using namespace std;
 
 bool loadFiles(vector<ClassifierObject*>*, vector<ClassifierObject*>*, int*);
 void divide(const vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int, int);
-void kNNmetric(int, int, vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*);
+int kNNmetric(int, int, vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*);
 int **cross(int);
 
 int main(int argc, char* argv[]) {
@@ -153,7 +153,8 @@ void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObjec
 	delete groupAmount;
 }
 
-void kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups) {
+int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups) {
+	int leader;
 	for (int z = 0; z < (int)(*testGroup).size(); z++) {
 
 		ClassifierObject *findMyFriends = (*testGroup).at(z);
@@ -168,13 +169,28 @@ void kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vecto
 				ClassifierObject *currentTestSubject = (*currentTestGroup).at(y);
 				for (int i = 0; i < NN; i++) {
 					bool change = findMyFriends->isNewFriendBetter((*bestFriends).at(i), currentTestSubject);
+					if (change == true) {
+						(*bestFriends).at(i) = currentTestSubject;
+					}
 				}
 
 			}
 		}
 
-	}
+		int *groupCounter = new int[NN] {0};
+		for (int x = 0; x < NN; x++) {
+			int p = (int)(*bestFriends).at(x)->getDataAt(0) - 1;
+			groupCounter[p] ++;
+		}
+		leader = 0;
+		for (int x = 0; x < NN; x++) {
+			if (groupCounter[x] > groupCounter[leader]) leader = x;
+		}
+		leader += 1;
+		cout << "\nNajblizsi sasiedzi dla probki " << z << " znalezieni, klasyfikacja: " << leader << "(" << (*findMyFriends).getDataAt(0) << ")";
 
+	}
+	return leader;
 	
 }
 

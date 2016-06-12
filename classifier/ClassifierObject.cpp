@@ -40,6 +40,10 @@ bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObjec
 		oldSum += pow(data[i] - (*oldF).data[i], 2);
 		newSum += pow(data[i] - (*newF).data[i], 2);
 	}
+	sqrt(oldSum);
+	sqrt(newSum);
+
+	if (newSum < oldSum) result = true;
 
 	return result;
 }
