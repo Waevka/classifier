@@ -13,6 +13,7 @@
 using namespace std;
 
 bool loadFiles(vector<ClassifierObject*>*, vector<ClassifierObject*>*, int*);
+void shuffle(vector<ClassifierObject*>*, int);
 void divide(const vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int, int);
 int kNNmetric(int, int, vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int);
 int **cross(int);
@@ -48,6 +49,8 @@ int main(int argc, char* argv[]) {
 		wineGroups.push_back(new vector<ClassifierObject*>());
 	}
 
+	shuffle(&irisRawData, 30);
+	shuffle(&wineRawData, 30);
 	divide(&irisRawData, &irisGroups, groupCount, objectCount[0]);
 	divide(&wineRawData, &wineGroups, groupCount, objectCount[1]);
 	
@@ -140,6 +143,17 @@ bool loadFiles(vector<ClassifierObject*> *irisList, vector<ClassifierObject*> *w
 	}
 
 	return success;
+}
+
+void shuffle(vector<ClassifierObject*>* data, int steps) {
+	for (int i = 0; i < steps; i++) {
+		int a = rand() % (int)(*data).size();
+		int b = rand() % (int)(*data).size();
+
+		ClassifierObject *temp = (*data).at(a);
+		(*data).at(a) = (*data).at(b);
+		(*data).at(b) = temp;
+	}
 }
 
 void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObject*>*> *processedData, int parts, int count) {

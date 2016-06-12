@@ -31,7 +31,7 @@ double ClassifierObject::getDataAt(int i)
 // method:
 // 1 - Euclidean
 // 2 - Chebyshev
-// 3 - taxi
+// 3 - Manhattan
 bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObject *newF, int method) {
 	bool result = false;
 	int k = getColumnCount();
@@ -74,6 +74,15 @@ bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObjec
 
 	}
 	else {
+		// Manhattan
+		double oldSum = 0;
+		double newSum = 0;
+
+		for (int i = 1; i < k; i++) {
+			oldSum += fabs(data[i] - (*oldF).data[i]);
+			newSum += fabs(data[i] - (*newF).data[i]);
+		}
+		if (newSum < oldSum) result = true;
 
 	}
 
