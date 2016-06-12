@@ -28,22 +28,36 @@ double ClassifierObject::getDataAt(int i)
 	return ClassifierObject::data[i];
 }
 
-bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObject *newF) {
+// method:
+// 1 - Euclidean
+// 2 - Chebyshev
+// 3 - taxi
+bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObject *newF, int method) {
 	bool result = false;
 
-	// euclidean
-	int k = getColumnCount();
-	double oldSum = 0;
-	double newSum = 0;
+	if (method == 1) {
+		// euclidean
+		int k = getColumnCount();
+		double oldSum = 0;
+		double newSum = 0;
 
-	for (int i = 1; i < k; i++) {
-		oldSum += pow(data[i] - (*oldF).data[i], 2);
-		newSum += pow(data[i] - (*newF).data[i], 2);
+		for (int i = 1; i < k; i++) {
+			oldSum += pow(data[i] - (*oldF).data[i], 2);
+			newSum += pow(data[i] - (*newF).data[i], 2);
+		}
+		sqrt(oldSum);
+		sqrt(newSum);
+
+		if (newSum < oldSum) result = true;
 	}
-	sqrt(oldSum);
-	sqrt(newSum);
+	else if (method == 2) {
+		// chebyshev
 
-	if (newSum < oldSum) result = true;
+	}
+	else {
+
+	}
+
 
 	return result;
 }
