@@ -12,9 +12,9 @@
 
 using namespace std;
 
-bool loadFiles(vector<ClassifierObject>*, vector<ClassifierObject>*, int*);
-void divide(const vector<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
-void kNNmetric(int, int, vector<ClassifierObject>, vector<vector<ClassifierObject>>);
+bool loadFiles(vector<ClassifierObject*>*, vector<ClassifierObject*>*, int*);
+void divide(const vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int, int);
+void kNNmetric(int, int, vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*);
 int **cross(int);
 
 int main(int argc, char* argv[]) {
@@ -23,29 +23,34 @@ int main(int argc, char* argv[]) {
 	int groupCount = 3;
 	int *objectCount = new int[2];
 
-	vector<ClassifierObject> *irisRawData = new vector<ClassifierObject>;
-	vector<ClassifierObject> *wineRawData = new vector<ClassifierObject>;
+	vector<ClassifierObject*> irisRawData;
+	vector<ClassifierObject*> wineRawData;
 
-	loadFiles(irisRawData, wineRawData, objectCount);
+	loadFiles(&irisRawData, &wineRawData, objectCount);
 
 	cout << "Wczytano pliki. Rozpoczynam obliczenia\n";
 
-	vector<vector<ClassifierObject>> irisGroups(groupCount);
-	vector<vector<ClassifierObject>> wineGroups(groupCount);
+	vector<vector<ClassifierObject*>*> irisGroups;
+	vector<vector<ClassifierObject*>*> wineGroups;
 
-	divide(irisRawData, &irisGroups, groupCount, objectCount[0]);
-	divide(wineRawData, &wineGroups, groupCount, objectCount[1]);
+	for (int i = 0; i < groupCount; i++) {
+		irisGroups.push_back(new vector<ClassifierObject*>());
+		wineGroups.push_back(new vector<ClassifierObject*>());
+	}
+
+	divide(&irisRawData, &irisGroups, groupCount, objectCount[0]);
+	divide(&wineRawData, &wineGroups, groupCount, objectCount[1]);
 	
 	int **groups = cross(groupCount);
 
 	for (int i = 0; i < groupCount; i++) {
 		int* currentGroup = groups[i];
-		vector<ClassifierObject> testingGroup = irisGroups.at(currentGroup[0]);
-		vector<vector<ClassifierObject>> testGroups;
+		vector<ClassifierObject*> *testingGroup = irisGroups.at(currentGroup[0]);
+		vector<vector<ClassifierObject*>*> *testGroups = new vector<vector<ClassifierObject*>*>;
 		cout << "\nFold " << i << " of " << groupCount;
 
 		for (int j = 1; j < groupCount; j++) {
-			testGroups.push_back(irisGroups.at(currentGroup[j]));
+			(*testGroups).push_back(irisGroups.at(currentGroup[j]));
 		}
 
 		kNNmetric(groupCount, 3, testingGroup, testGroups);
@@ -56,7 +61,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-bool loadFiles(vector<ClassifierObject> *irisList, vector<ClassifierObject> *wineList, int *objectsCount) {
+bool loadFiles(vector<ClassifierObject*> *irisList, vector<ClassifierObject*> *wineList, int *objectsCount) {
 	bool success = false;
 	ifstream stream;
 	///////////////////////////////// load iris data
@@ -89,7 +94,7 @@ bool loadFiles(vector<ClassifierObject> *irisList, vector<ClassifierObject> *win
 					object->setDataAt(i+1, dataVector.at(i));
 				}
 				object->setDataAt(0, dataVector.at(4));
-				irisList->push_back(*object);
+				irisList->push_back(object);
 				objectsCount[0] ++;
 			}
 		}
@@ -116,7 +121,7 @@ bool loadFiles(vector<ClassifierObject> *irisList, vector<ClassifierObject> *win
 				for (int i = 0; i < 13; i++) {
 					object->setDataAt(i, dataVector.at(i));
 				}
-				wineList->push_back(*object);
+				wineList->push_back(object);
 				objectsCount[1] ++;
 			}
 		}
@@ -126,14 +131,14 @@ bool loadFiles(vector<ClassifierObject> *irisList, vector<ClassifierObject> *win
 	return success;
 }
 
-void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject>> *processedData, int parts, int count) {
+void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObject*>*> *processedData, int parts, int count) {
 	int dataSetGroups = 3;
 	size_t groupSize = count / dataSetGroups + count % dataSetGroups;
 	int i = 0;
 
 	while(i < count) {
 		int group = rand() % 3;
-		vector<ClassifierObject> *chosen = &(*processedData)[group];
+		vector<ClassifierObject*> *chosen = (*processedData)[group];
 		if (chosen->size() < groupSize) {
 			chosen->push_back((*data)[i]);
 			i++;
@@ -148,18 +153,22 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 	delete groupAmount;
 }
 
-void kNNmetric(int k, int NN, vector<ClassifierObject> testGroup, vector<vector<ClassifierObject>> testingGroups) {
-	for (int z = 0; z < (int)testGroup.size(); z++) {
+void kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups) {
+	for (int z = 0; z < (int)(*testGroup).size(); z++) {
 
-		ClassifierObject findMyFriends = testGroup.at(z);
-		vector<ClassifierObject> bestFriends;
-		for (int i = 0; i < NN; i++) bestFriends.push_back((testingGroups.at(0)).at(i)); // init closest neighbours 
-		int testingGroupsCount = (int)testingGroups.size();
+		ClassifierObject *findMyFriends = (*testGroup).at(z);
+		vector<ClassifierObject*> *bestFriends = new vector<ClassifierObject*>;
+		for (int i = 0; i < NN; i++) (*bestFriends).push_back(((*testingGroups).at(0))->at(i)); // init closest neighbours 
+		int testingGroupsCount = (int)(*testingGroups).size();
 		
 		for (int x = 0; x < testingGroupsCount; x++) {
-			int testingGroupSize = (int)testingGroups.at(x).size();
+			vector<ClassifierObject*> *currentTestGroup = (*testingGroups).at(x);
+			int testingGroupSize = (int)(*currentTestGroup).size();
 			for (int y = 0; y < testingGroupSize; y++) {
-
+				ClassifierObject *currentTestSubject = (*currentTestGroup).at(y);
+				for (int i = 0; i < NN; i++) {
+					bool change = findMyFriends->isNewFriendBetter((*bestFriends).at(i), currentTestSubject);
+				}
 
 			}
 		}
