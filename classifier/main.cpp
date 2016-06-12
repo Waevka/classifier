@@ -14,7 +14,7 @@ using namespace std;
 
 bool loadFiles(vector<ClassifierObject>*, vector<ClassifierObject>*, int*);
 void divide(const vector<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
-void kNNmetric(vector<vector<ClassifierObject>>*, int);
+void kNNmetric(int, vector<ClassifierObject>, vector<vector<ClassifierObject>>);
 int *cross(int);
 
 int main(int argc, char* argv[]) {
@@ -34,8 +34,19 @@ int main(int argc, char* argv[]) {
 	divide(irisRawData, &irisGroups, groupCount, objectCount[0]);
 	divide(wineRawData, &wineGroups, groupCount, objectCount[1]);
 	
-	kNNmetric(&irisGroups, groupCount);
+	int *groups = cross(groupCount);
 
+	for (int i = 0; i < groupCount; i++) {
+		int* currentGroup = &groups[i];
+		vector<ClassifierObject> testingGroup = irisGroups.at(currentGroup[0]);
+		vector<vector<ClassifierObject>> testGroups;
+		for (int j = 1; j < groupCount; j++) {
+			testGroups.push_back(irisGroups.at(currentGroup[j]));
+			kNNmetric(groupCount, testingGroup, testGroups);
+		}
+
+		kNNmetric(groupCount, testingGroup, testGroups);
+	}
 	cin.get();
 	return 0;
 }
@@ -132,19 +143,10 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 	delete groupAmount;
 }
 
-void kNNmetric(vector<vector<ClassifierObject>>* data, int k)	{
-	int *groups = cross(k);
-
-	for (int i = 0; i < k; i++) {
-		int* currentGroup = &groups[i];
-		vector<ClassifierObject> testingGroup = (*data).at(currentGroup[0]);
-		vector<vector<ClassifierObject>> testGroups;
-		for (int j = 1; j < k; j++) {
-			testGroups.push_back((*data).at(currentGroup[j]));
-		}
+void kNNmetric(int k, vector<ClassifierObject> testGroup, vector<vector<ClassifierObject>> testingGroups) {
+	
 		//////////// process
 
-	}
 	//add loop for deletion
 	//delete[] groups;
 }
