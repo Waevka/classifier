@@ -14,8 +14,8 @@ using namespace std;
 
 bool loadFiles(vector<ClassifierObject>*, vector<ClassifierObject>*, int*);
 void divide(const vector<ClassifierObject>*, vector<vector<ClassifierObject>>*, int, int);
-void kNNmetric(int, vector<ClassifierObject>, vector<vector<ClassifierObject>>);
-int *cross(int);
+void kNNmetric(int, int, vector<ClassifierObject>, vector<vector<ClassifierObject>>);
+int **cross(int);
 
 int main(int argc, char* argv[]) {
 
@@ -28,24 +28,27 @@ int main(int argc, char* argv[]) {
 
 	loadFiles(irisRawData, wineRawData, objectCount);
 
+	cout << "Wczytano pliki. Rozpoczynam obliczenia\n";
+
 	vector<vector<ClassifierObject>> irisGroups(groupCount);
 	vector<vector<ClassifierObject>> wineGroups(groupCount);
 
 	divide(irisRawData, &irisGroups, groupCount, objectCount[0]);
 	divide(wineRawData, &wineGroups, groupCount, objectCount[1]);
 	
-	int *groups = cross(groupCount);
+	int **groups = cross(groupCount);
 
 	for (int i = 0; i < groupCount; i++) {
-		int* currentGroup = &groups[i];
+		int* currentGroup = groups[i];
 		vector<ClassifierObject> testingGroup = irisGroups.at(currentGroup[0]);
 		vector<vector<ClassifierObject>> testGroups;
+		cout << "\nFold " << i << " of " << groupCount;
+
 		for (int j = 1; j < groupCount; j++) {
 			testGroups.push_back(irisGroups.at(currentGroup[j]));
-			kNNmetric(groupCount, testingGroup, testGroups);
 		}
 
-		kNNmetric(groupCount, testingGroup, testGroups);
+		kNNmetric(groupCount, 3, testingGroup, testGroups);
 	}
 	cin.get();
 	return 0;
@@ -143,7 +146,7 @@ void divide(const vector<ClassifierObject> *data, vector<vector<ClassifierObject
 	delete groupAmount;
 }
 
-void kNNmetric(int k, vector<ClassifierObject> testGroup, vector<vector<ClassifierObject>> testingGroups) {
+void kNNmetric(int k, int NN, vector<ClassifierObject> testGroup, vector<vector<ClassifierObject>> testingGroups) {
 	
 		//////////// process
 
@@ -151,7 +154,7 @@ void kNNmetric(int k, vector<ClassifierObject> testGroup, vector<vector<Classifi
 	//delete[] groups;
 }
 
-int *cross(int k) {
+int **cross(int k) {
 	int **output = new int*[k];
 	for (int i = 0; i < k; i++) {
 		output[i] = new int[k];
@@ -166,5 +169,5 @@ int *cross(int k) {
 			}
 		}
 	}
-	return *output;
+	return output;
 }
