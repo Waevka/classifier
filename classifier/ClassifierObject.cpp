@@ -34,10 +34,10 @@ double ClassifierObject::getDataAt(int i)
 // 3 - taxi
 bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObject *newF, int method) {
 	bool result = false;
+	int k = getColumnCount();
 
 	if (method == 1) {
 		// euclidean
-		int k = getColumnCount();
 		double oldSum = 0;
 		double newSum = 0;
 
@@ -52,6 +52,25 @@ bool ClassifierObject::isNewFriendBetter(ClassifierObject *oldF, ClassifierObjec
 	}
 	else if (method == 2) {
 		// chebyshev
+		double *oldValues = new double[k-1];
+		double *newValues = new double[k-1];
+
+		for (int i = 1; i < k; i++) {
+			oldValues[i - 1] = fabs(data[i] - (*oldF).data[i]);
+			newValues[i - 1] = fabs(data[i] - (*newF).data[i]);
+		}
+
+		int oldMax = 0;
+		int newMax = 0;
+
+		for (int i = 0; i < k - 1; i++) {
+			if (oldValues[i] < oldValues[oldMax]) oldMax = i;
+			if (newValues[i] < newValues[newMax]) newMax = i;
+		}
+
+		if (newValues[newMax] < oldValues[oldMax]) result = true;
+
+		delete oldValues, newValues;
 
 	}
 	else {
