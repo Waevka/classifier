@@ -13,6 +13,7 @@
 using namespace std;
 
 bool loadFiles(vector<ClassifierObject*>*, vector<ClassifierObject*>*, int*);
+void normalize(vector<ClassifierObject*>*);
 void shuffle(vector<ClassifierObject*>*, int);
 void divide(const vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int, int);
 int kNNmetric(int, int, vector<ClassifierObject*>*, vector<vector<ClassifierObject*>*>*, int);
@@ -82,6 +83,8 @@ int main(int argc, char* argv[]) {
 		wineGroups.push_back(new vector<ClassifierObject*>());
 	}
 
+	normalize(&irisRawData);
+	normalize(&wineRawData);
 	shuffle(&irisRawData, 150);
 	shuffle(&wineRawData, 150);
 	divide(&irisRawData, &irisGroups, groupCount, objectCount[0]);
@@ -99,7 +102,7 @@ int main(int argc, char* argv[]) {
 		for (int j = 1; j < groupCount; j++) {
 			(*testGroups).push_back(irisGroups.at(currentGroup[j]));
 		}
-		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
+		kNNmetric(groupCount, NN, testingGroup, testGroups, userSelection);
 	}
 
 	cout << "\n\nWcisnij dowolny klawisz aby kontynuowac do nastepnego zestawu:";
@@ -116,7 +119,7 @@ int main(int argc, char* argv[]) {
 		for (int j = 1; j < groupCount; j++) {
 			(*testGroups).push_back(wineGroups.at(currentGroup[j]));
 		}
-		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
+		kNNmetric(groupCount, NN, testingGroup, testGroups, userSelection);
 	}
 
 	//add loop for deletion
@@ -194,6 +197,20 @@ bool loadFiles(vector<ClassifierObject*> *irisList, vector<ClassifierObject*> *w
 	}
 
 	return success;
+}
+
+void normalize(vector<ClassifierObject*>* data) {
+	// 1. policz srednia
+	int columns = (*data).at(0)->getColumnCount();
+	double* tempData = new double[columns] {0};
+	int dataCount = (int)(*data).size();
+	for (int i = 0; i < dataCount; i++) {
+		for (int j = 1; j < columns; j++) {
+			tempData[j] += (*data).at(i)->getDataAt(j);
+		}
+	}
+
+	delete tempData;
 }
 
 void shuffle(vector<ClassifierObject*>* data, int steps) {
