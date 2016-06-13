@@ -214,10 +214,17 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 			groupCounter[p] ++;
 		}
 		leader = 0;
+		bool multipleFlag = false;
 		for (int x = 0; x < NN; x++) {
-			if (groupCounter[x] > groupCounter[leader]) leader = x;
+			if (groupCounter[x] > groupCounter[leader]) { leader = x; };
+			if (groupCounter[x] == groupCounter[leader]) { multipleFlag = true; }
 		}
-		leader += 1;
+		if(multipleFlag){
+			leader = (int)(*currentBestFriend).getDataAt(0); 
+		}
+		else {
+			leader += 1;
+		}
 		cout << "\nKlasyfikacja dla probki " << z << ": " << leader << "(powinno byc: " << (*findMyFriends).getDataAt(0) << ")";
 
 	}
