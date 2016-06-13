@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
 	int groupCount = 3;
 	int *objectCount = new int[2];
 	int userSelection = 0;
+	int userNN = 0;
 
 	vector<ClassifierObject*> irisRawData;
 	vector<ClassifierObject*> wineRawData;
@@ -40,6 +41,38 @@ int main(int argc, char* argv[]) {
 	if (userSelection > 3 || userSelection < 1) {
 		userSelection = 1;
 	}
+	cin.ignore();
+	cin.clear();
+	cout << "\n\nWybierz liczbe sasiadow:";
+	cout << "\n1. 1";
+	cout << "\n2. 3";
+	cout << "\n3. 5";
+	cout << "\n4. 10";
+	cout << "\nt\tWybor: ";
+
+	cin >> userNN;
+	if (userNN > 3 || userNN < 1) {
+		userNN = 2;
+	}
+
+	int NN;
+	switch (NN) {
+	case 1:
+		NN = 1;
+		break;
+	case 2:
+		NN = 3;
+		break;
+	case 3:
+		NN = 5;
+		break;
+	case 4:
+		NN = 10;
+		break;
+	default:
+		break;
+	}
+
 
 	vector<vector<ClassifierObject*>*> irisGroups;
 	vector<vector<ClassifierObject*>*> wineGroups;
@@ -56,18 +89,32 @@ int main(int argc, char* argv[]) {
 	
 	int **groups = cross(groupCount);
 
+	cout << "\n\nRozpoczynam test dla probek irysow";
 	for (int i = 0; i < groupCount; i++) {
 		int* currentGroup = groups[i];
 		vector<ClassifierObject*> *testingGroup = irisGroups.at(currentGroup[0]);
 		vector<vector<ClassifierObject*>*> *testGroups = new vector<vector<ClassifierObject*>*>;
-		cout << "\n\nZbior testowy nr " << i << " z " << groupCount;
+		cout << "\n\nZbior testowy nr " << i+1 << " z " << groupCount;
 
 		for (int j = 1; j < groupCount; j++) {
 			(*testGroups).push_back(irisGroups.at(currentGroup[j]));
 		}
-
-		kNNmetric(groupCount, 4, testingGroup, testGroups, userSelection);
+		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
 	}
+
+	cout << "\n\nRozpoczynam test dla probek wina";
+	for (int i = 0; i < groupCount; i++) {
+		int* currentGroup = groups[i];
+		vector<ClassifierObject*> *testingGroup = wineGroups.at(currentGroup[0]);
+		vector<vector<ClassifierObject*>*> *testGroups = new vector<vector<ClassifierObject*>*>;
+		cout << "\n\nZbior testowy nr " << i+1 << " z " << groupCount;
+
+		for (int j = 1; j < groupCount; j++) {
+			(*testGroups).push_back(wineGroups.at(currentGroup[j]));
+		}
+		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
+	}
+
 	//add loop for deletion
 	//delete[] groups;
 	cin.ignore();
@@ -180,6 +227,7 @@ void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObjec
 
 int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups, int method) {
 	int leader;
+	double guessedRight = 0;
 	ClassifierObject *currentBestFriend = ((*testingGroups).at(0))->at(0);
 	cout << "\nProbka|Znaleziona|Prawdziwa|Poprawne?";
 	for (int z = 0; z < (int)(*testGroup).size(); z++) {
@@ -226,9 +274,11 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 		else {
 			leader += 1;
 		}
+		if ((leader == (int)(*findMyFriends).getDataAt(0))) { guessedRight += 1; }
 		cout << "\nProbka " << z << "  |  " << leader << "  |  " << (*findMyFriends).getDataAt(0) << " |" << ((leader == (int)(*findMyFriends).getDataAt(0))?"tak":"nie");
 
 	}
+	cout << "\n Poprawne: " << guessedRight << "/" << (*testGroup).size() << " (" << (guessedRight / (double)(*testGroup).size()) * 100 << "%)";
 	return leader;
 	
 }
