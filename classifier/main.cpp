@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	cout << "\n2. 3";
 	cout << "\n3. 5";
 	cout << "\n4. 10";
-	cout << "\nt\tWybor: ";
+	cout << "\n\tWybor: ";
 
 	cin >> userNN;
 	if (userNN > 3 || userNN < 1) {
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	int NN;
-	switch (NN) {
+	switch (userNN) {
 	case 1:
 		NN = 1;
 		break;
@@ -101,6 +101,10 @@ int main(int argc, char* argv[]) {
 		}
 		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
 	}
+
+	cout << "\n\nWcisnij dowolny klawisz aby kontynuowac do nastepnego zestawu:";
+	cin.ignore();
+	cin.get();
 
 	cout << "\n\nRozpoczynam test dla probek wina";
 	for (int i = 0; i < groupCount; i++) {
