@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 	int *objectCount = new int[2];
 	int userSelection = 0;
 	int userNN = 0;
+	int userNorm = 0;
 
 	vector<ClassifierObject*> irisRawData;
 	vector<ClassifierObject*> wineRawData;
@@ -84,8 +85,23 @@ int main(int argc, char* argv[]) {
 		wineGroups.push_back(new vector<ClassifierObject*>());
 	}
 
-	normalize(&irisRawData);
-	normalize(&wineRawData);
+	cout << "\n\nCzy chcesz przeprowadzic normalizacje danych?";
+	cout << "\n1. Nie";
+	cout << "\n2. Tak";
+	cout << "\n\tWybor: ";
+	cin.ignore();
+	cin.clear();
+
+	cin >> userNorm;
+	if (userNorm != 1 && userNorm != 2) {
+		userNorm = 1;
+	}
+
+	if (userNorm == 2) {
+		normalize(&irisRawData);
+		normalize(&wineRawData);
+	}
+
 	shuffle(&irisRawData, 150);
 	shuffle(&wineRawData, 150);
 	divide(&irisRawData, &irisGroups, groupCount, objectCount[0]);
