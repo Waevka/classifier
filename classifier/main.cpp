@@ -9,6 +9,7 @@
 #include "ClassifierObject.h"
 #include "Iris.h"
 #include "Wine.h"
+#include "math.h"
 
 using namespace std;
 
@@ -202,15 +203,36 @@ bool loadFiles(vector<ClassifierObject*> *irisList, vector<ClassifierObject*> *w
 void normalize(vector<ClassifierObject*>* data) {
 	// 1. policz srednia
 	int columns = (*data).at(0)->getColumnCount();
-	double* tempData = new double[columns] {0};
 	int dataCount = (int)(*data).size();
+
+	double* avg = new double[columns] {0};
 	for (int i = 0; i < dataCount; i++) {
 		for (int j = 1; j < columns; j++) {
-			tempData[j] += (*data).at(i)->getDataAt(j);
+			avg[j] += (*data).at(i)->getDataAt(j);
+		}
+	}
+	for (int j = 1; j < columns; j++) {
+		avg[j] = avg[j] / dataCount;
+	}
+	// 2. policz odchylenie
+	double* var = new double[columns] {0};
+	for (int i = 0; i < dataCount; i++) {
+		for (int j = 1; j < columns; j++) {
+			var[j] += pow((*data).at(i)->getDataAt(j) - avg[j], 2);
+		}
+	}
+	for (int j = 1; j < columns; j++) {
+		var[j] = sqrt(var[j] / dataCount);
+	}
+	// 3. standaryzuj
+	for (int i = 0; i < dataCount; i++) {
+		for (int j = 1; j < columns; j++) {
+			(*data).at(i)->data[j] = ((*data).at(i)->data[j] - avg[j]) / var[j];
 		}
 	}
 
-	delete tempData;
+	delete avg;
+	delete var;
 }
 
 void shuffle(vector<ClassifierObject*>* data, int steps) {
@@ -237,13 +259,6 @@ void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObjec
 			i++;
 		}
 	}
-	//for () {
-		//int index = data[i];
-		//dataSetGroupsProportions[index]++;
-	//}
-
-	int *groupAmount = new int[parts];
-	delete groupAmount;
 }
 
 int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups, int method) {
