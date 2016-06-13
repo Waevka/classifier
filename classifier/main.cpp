@@ -60,13 +60,13 @@ int main(int argc, char* argv[]) {
 		int* currentGroup = groups[i];
 		vector<ClassifierObject*> *testingGroup = irisGroups.at(currentGroup[0]);
 		vector<vector<ClassifierObject*>*> *testGroups = new vector<vector<ClassifierObject*>*>;
-		cout << "\nZbior testowy nr " << i << " z " << groupCount;
+		cout << "\n\nZbior testowy nr " << i << " z " << groupCount;
 
 		for (int j = 1; j < groupCount; j++) {
 			(*testGroups).push_back(irisGroups.at(currentGroup[j]));
 		}
 
-		kNNmetric(groupCount, 3, testingGroup, testGroups, userSelection);
+		kNNmetric(groupCount, 4, testingGroup, testGroups, userSelection);
 	}
 	//add loop for deletion
 	//delete[] groups;
@@ -181,6 +181,7 @@ void divide(const vector<ClassifierObject*> *data, vector<vector<ClassifierObjec
 int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector<ClassifierObject*>*> *testingGroups, int method) {
 	int leader;
 	ClassifierObject *currentBestFriend = ((*testingGroups).at(0))->at(0);
+	cout << "\nProbka|Znaleziona|Prawdziwa|Poprawne?";
 	for (int z = 0; z < (int)(*testGroup).size(); z++) {
 
 		ClassifierObject *findMyFriends = (*testGroup).at(z);
@@ -217,7 +218,7 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 		bool multipleFlag = false;
 		for (int x = 0; x < NN; x++) {
 			if (groupCounter[x] > groupCounter[leader]) { leader = x; };
-			if (groupCounter[x] == groupCounter[leader]) { multipleFlag = true; }
+			if (groupCounter[x] == groupCounter[leader] && x != leader) { multipleFlag = true; }
 		}
 		if(multipleFlag){
 			leader = (int)(*currentBestFriend).getDataAt(0); 
@@ -225,7 +226,7 @@ int kNNmetric(int k, int NN, vector<ClassifierObject*> *testGroup, vector<vector
 		else {
 			leader += 1;
 		}
-		cout << "\nKlasyfikacja dla probki " << z << ": " << leader << "(powinno byc: " << (*findMyFriends).getDataAt(0) << ")";
+		cout << "\nProbka " << z << "  |  " << leader << "  |  " << (*findMyFriends).getDataAt(0) << " |" << ((leader == (int)(*findMyFriends).getDataAt(0))?"tak":"nie");
 
 	}
 	return leader;
